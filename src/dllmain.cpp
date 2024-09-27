@@ -29,11 +29,9 @@ void handle_on_start_join_game(OnStartJoinGameEvent &event)
         checking_started = true;
         Level *level = client.minecraft->getLevel();
         GameRules &gamerules = level->getGameRules();
-        unsigned char *show_choordinates_p = ((unsigned char *)&gamerules.mGamerules[GameRulesIndex::ShowCoordinates]) + 4;
-        bool show_choordinates = *show_choordinates_p;
-        show_choordinates ^= true;
-        *show_choordinates_p = show_choordinates;
-        log_info("showing_coordinates: {}", show_choordinates);
+        GameRule &show_choordinates = gamerules.mGamerules[GameRulesIndex::ShowCoordinates];
+        show_choordinates.mEnabled ^= true;
+        log_info("showing_coordinates: {}", show_choordinates.mEnabled);
       },
       false);
     made_input_handlers = true;
