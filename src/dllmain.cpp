@@ -5,48 +5,47 @@
 #include <amethyst/runtime/events/InputEvents.hpp>
 #include <minecraft/src/common/world/level/storage/GameRules.hpp>
 #include <minecraft/src/common/world/level/Level.hpp>
+#include <minecraft/src/common/Minecraft.hpp>
 
 using namespace Amethyst;
 
 bool checking_started = false;
 
 AmethystContext *context; 
-bool             showing_coordinates = false;
 
 unsigned char prior_gamerule_state[sizeof(GameRule)];
 bool gamerule_state_difference[sizeof(GameRule)];
 
+bool made_input_handlers = false;
+
 void handle_on_start_join_game(OnStartJoinGameEvent &event)
 {
-  auto &input_manager = *context->mInputManager;
-  input_manager.AddButtonDownHandler(
-    "show_coordinates",
-    [](FocusImpact, ClientInstance &client)
-    {
-      checking_started = true;
-
-
-      
-      showing_coordinates ^= true;
-      Level *level = GetLevel();
-      GameRules &gamerules = level->getGameRules();
-      unsigned char *show_coordinates = (unsigned char *)&gamerules.mGamerules[GameRulesIndex::ShowCoordinates];
-      show_coordinates[4] = showing_coordinates;
-      log_info("showing_coordinates: {}", showing_coordinates);
-
-
-
-      
-    },
-    false);
+  if (!made_input_handlers)
+  {
+    context->mInputManager->AddButtonDownHandler(
+      "show_coordinates",
+      [](FocusImpact, ClientInstance &client)
+      {
+        checking_started = true;
+        Level *level = client.minecraft->getLevel();
+        GameRules &gamerules = level->getGameRules();
+        unsigned char *show_choordinates_p = ((unsigned char *)&gamerules.mGamerules[GameRulesIndex::ShowCoordinates]) + 4;
+        bool show_choordinates = *show_choordinates_p;
+        show_choordinates ^= true;
+        *show_choordinates_p = show_choordinates;
+        log_info("showing_coordinates: {}", show_choordinates);
+      },
+      false);
+    made_input_handlers = true;
+  }
 }
 
 void handle_register_inputs(RegisterInputsEvent &event)
 {
-  event.inputManager.RegisterNewInput("show_coordinates", {96});
+  event.inputManager.RegisterNewInput("show_coordinates", {0x60});
 }
 
-void handle_update_event(UpdateEvent &)
+void handle_update(UpdateEvent &)
 {
 #if 0
   if (!checking_started) return;
@@ -79,10 +78,9 @@ EXPORT void Initialize(AmethystContext &_context)
   context->mFeatures->enableInputSystem = true;
 
   auto &events = GetEventBus();
-  events.AddListener<OnStartJoinGameEvent>(&handle_on_start_join_game);
+  events.AddListener<UpdateEvent>(&handle_update);
   events.AddListener<RegisterInputsEvent>(&handle_register_inputs);
-  events.AddListener<UpdateEvent>(&handle_update_event);
-
+  events.AddListener<OnStartJoinGameEvent>(&handle_on_start_join_game);
   log_info("Initialized successfully.");
 }
 

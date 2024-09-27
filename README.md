@@ -13,3 +13,5 @@ type in majuscule... so you gotta do some maneuvering....
 ## Problems
 
 This _likely_ only works for the owner of the world.
+
+This doesn't save the key assigned to `key.show_coordinates`.
