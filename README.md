@@ -7,8 +7,9 @@ input `key.show_coordinates` (defaults to F3).
 
 I hate how the coordinates just _stays_ there... it's like how the LED of the
 Caps Lock key shines brightly when you press it, so you have to press it again
-to untoggle the light, but that gives the opposite intended effect by making you
-type in majuscule... so you gotta do some maneuvering....
+to untoggle the light, but due to some latent cause, you're now typing in
+majuscule despite the light being off... so now you gotta do some maneuvering
+to finally have the light off, and not type in majuscule.
 
 ## Problems
 
