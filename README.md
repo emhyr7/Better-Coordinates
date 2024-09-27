@@ -1,7 +1,7 @@
 # Better-Coordinates
 
 This mod allows you to toggle the "Show Coordinates" world option using the
-input `key.show_coordinates`.
+input `key.show_coordinates` (defaults to F3).
 
 ## Rationale
 
@@ -12,6 +12,7 @@ type in majuscule... so you gotta do some maneuvering....
 
 ## Problems
 
-This _likely_ only works for the owner of the world.
+I haven't tested this in multiplayer....
 
-This doesn't save the key assigned to `key.show_coordinates`.
+This doesn't save the key assigned to `key.show_coordinates`, so if you
+reassign it, and reload the game, it will revert back to F3.

@@ -42,7 +42,7 @@ void handle_on_start_join_game(OnStartJoinGameEvent &event)
 
 void handle_register_inputs(RegisterInputsEvent &event)
 {
-  event.inputManager.RegisterNewInput("show_coordinates", {0x60});
+  event.inputManager.RegisterNewInput("show_coordinates", {VK_F3});
 }
 
 void handle_update(UpdateEvent &)
